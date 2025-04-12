@@ -1,0 +1,18 @@
+// استرجاع طبقة محطات الضخ
+var pumpStations = FeatureSetByName($datastore, "PumpStations", ["StationType"]);
+
+// التحقق من النقاط التي تتلامس مع الأنابيب
+var touch = Touches(pumpStations, Geometry($feature));
+
+// إذا كانت النقطة تتلامس مع محطة ضخ
+if (Count(touch) > 0) {
+    var pumpStationType = First(touch).StationType;  // استخراج نوع محطة الضخ المتلامسة
+    var pipeType = $feature.PipeType;  // استخراج نوع الأنابيب
+
+    // السماح فقط إذا كان نوع الأنابيب يتوافق مع نوع محطة الضخ
+    if (pipeType == pumpStationType) {
+        return true;  // الأنابيب متوافقة مع محطة الضخ
+    }
+}
+
+return false;  // إذا لم يتطابق النوع
