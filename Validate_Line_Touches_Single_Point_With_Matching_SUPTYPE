@@ -1,0 +1,17 @@
+var points = FeatureSetByName($datastore, "points", ["SType"]);  // استرجاع النقاط من طبقة النقاط باستخدام الحقل SType
+
+// الحصول على النقاط التي تلامس الهندسة (الخط)
+var touch = Touches(points, Geometry($feature));  // التحقق من التلامس بين النقاط والخط الحالي
+
+// التأكد من وجود نقطة واحدة فقط متصلة
+if (Count(touch) > 0) {
+    var val = First(touch).SType;  // استخراج نوع النقطة المتلامسة
+    var lineType = $feature.SType; // استخراج نوع الخط
+
+    // السماح فقط إذا كان النوع في النقطة يساوي النوع في الخط
+    if (Count(touch) == 1 && val == lineType) {
+        return true;  // السماح بالاتصال إذا كان النوع مطابقًا
+    }
+}
+
+return false;  // إذا لم يتم التحقق من الشرط أو إذا لم يتطابق النوع
